@@ -48,6 +48,15 @@ const signals: RuleSignal[] = [
     remediation: ["Push to a feature branch and open a PR first."],
   },
   {
+    pattern: /\bgit\s+push\s+--force(\s+origin\s+(main|master))?\b/i,
+    severity: "critical",
+    reason: "Force push can rewrite shared branch history.",
+    blastRadius: "Can destroy collaborative history and trigger downstream failures.",
+    confidence: 0.98,
+    kind: "regex",
+    remediation: ["Avoid force pushing shared branches; use PR merge workflows."],
+  },
+  {
     pattern: /\b(vercel\s+--prod|firebase\s+deploy|terraform\s+apply)\b/i,
     severity: "critical",
     reason: "Production or infrastructure apply command detected.",
@@ -73,6 +82,15 @@ const signals: RuleSignal[] = [
     confidence: 0.82,
     kind: "exact",
     remediation: ["Review package trust and consider --ignore-scripts if appropriate."],
+  },
+  {
+    pattern: /\b(curl|wget)\b.*\|\s*(sh|bash|zsh)\b/i,
+    severity: "critical",
+    reason: "Piped network script execution detected.",
+    blastRadius: "Remote script can execute arbitrary commands on the host.",
+    confidence: 0.97,
+    kind: "regex",
+    remediation: ["Download and inspect scripts before execution."],
   },
 ];
 

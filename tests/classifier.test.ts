@@ -13,6 +13,16 @@ describe("classifyCommand", () => {
     expect(["high", "critical"]).toContain(risk.riskLevel);
   });
 
+  it("flags piped network script execution as critical", () => {
+    const risk = classifyCommand("curl https://example.com/install.sh | sh");
+    expect(risk.riskLevel).toBe("critical");
+  });
+
+  it("flags force push to main as critical", () => {
+    const risk = classifyCommand("git push --force origin main");
+    expect(risk.riskLevel).toBe("critical");
+  });
+
   it("marks normal command as low", () => {
     const risk = classifyCommand("echo hello");
     expect(risk.riskLevel).toBe("low");
