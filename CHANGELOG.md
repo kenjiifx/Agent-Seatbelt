@@ -6,7 +6,7 @@ All notable changes to this project are documented in this file.
 
 ### Changed
 - GitHub Actions workflow updated to Node 24-compatible action/runtime settings.
-- CI install path validated with `npm ci` lockfile-synced checks.
+- CI install path uses `npm install` for cross-platform optional dependency compatibility.
 
 ## v0.2.0 - 2026-04-28
 
