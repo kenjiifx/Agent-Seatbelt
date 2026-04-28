@@ -1,8 +1,12 @@
 # AgentSeatbelt
 
-AgentSeatbelt is a developer-first CLI runtime firewall for AI coding agents and humans running terminal commands.
+Runtime firewall for AI coding agents before they touch your terminal, repo, secrets, or production.
 
-It intercepts risky commands before execution, explains risk, enforces policy, asks for approval when needed, blocks critical secret reads by default, logs every decision, and creates rollback checkpoints for Git repositories.
+AgentSeatbelt intercepts risky terminal actions before execution, explains risk in plain language, enforces deterministic policy decisions, captures action receipts, and creates rollback checkpoints in Git repos.
+
+## Why now?
+
+AI coding agents can now run shell commands, edit repositories, install packages, access secrets, and trigger deploy paths. Modern developer environments were built for human intent, not autonomous tool execution. AgentSeatbelt adds a local control layer between agent output and real system impact.
 
 ## Features (v0)
 
@@ -12,8 +16,8 @@ It intercepts risky commands before execution, explains risk, enforces policy, a
 - Interactive approval for high/critical commands
 - Secret-read blocking by default (`.env`, keys, tokens)
 - Git checkpoint + rollback metadata
-- JSON receipts with explainability (`matchDetails`, confidence, reason)
-- Log views: table, JSON, NDJSON + filters
+- JSON action receipts with explainability (`matchDetails`, confidence, reason)
+- Action receipt views: table, JSON, NDJSON + filters
 - Dry-run simulation mode
 - Doctor command for local readiness checks
 
@@ -46,6 +50,8 @@ Creates:
 - `.seatbelt/logs/`
 - `.seatbelt/checkpoints.json`
 
+`--seed-baseline` is optional, local-only, disabled by default, and never uploads shell history.
+
 ### Run a command through Seatbelt
 
 ```bash
@@ -64,7 +70,7 @@ Risk panel output includes:
 - Approval required (yes/no)
 - Rollback available (yes/no)
 
-### View logs
+### View action receipts
 
 ```bash
 seatbelt logs
@@ -126,7 +132,7 @@ baselineAllowPatterns: []
 - Deterministic pattern classifier and policy decisions.
 - Explicitly blocks secret-read commands by default.
 - Requires interactive approval for high-impact commands.
-- Captures receipts for every decision path for auditing.
+- Captures action receipts for every decision path for auditing.
 - Creates Git checkpoint metadata before risky execution for faster recovery.
 
 ## Architecture
@@ -145,17 +151,29 @@ flowchart LR
   receipt --> logs["LogsAndAuditViews"]
 ```
 
-## 5-minute demo script
+## Demo in 90 seconds
 
 ```bash
 seatbelt init
 seatbelt run "echo safe path"
 seatbelt run "cat .env"
 seatbelt run "rm -rf build" --dry-run
-seatbelt run "git push origin main"
+seatbelt run "vercel --prod" --dry-run
 seatbelt logs --tail 10
-seatbelt rollback --list
+seatbelt doctor
 ```
+
+See also: `demo.sh` and `demo.ps1` for reproducible, safe demo runs.
+
+## Roadmap
+
+- Agent session mode
+- MCP proxy / tool-call enforcement
+- Receipt hash chaining
+- CI / GitHub Actions mode
+- Team policy packs
+- Dashboard
+- IDE integrations
 
 ## Testing
 
