@@ -2,6 +2,20 @@
 
 All notable changes to this project are documented in this file.
 
+## Unreleased
+
+### Added
+- CI workflow with build, tests, typecheck, lint, and release dry-run checks.
+- Contributor and governance docs (`CONTRIBUTING`, `CODE_OF_CONDUCT`, issue/PR templates).
+- Threat model documentation.
+- Receipt hash-chaining metadata (`chainIndex`, `previousReceiptHash`, `receiptHash`).
+- Session hardening tests and receipt chain tests.
+
+### Changed
+- Session mode hardening with validation and workspace scoping.
+- npm publish preparation metadata and release scripts.
+- README tightened for investor + senior developer launch positioning.
+
 ## v0.1.0 - 2026-04-28
 
 ### Added

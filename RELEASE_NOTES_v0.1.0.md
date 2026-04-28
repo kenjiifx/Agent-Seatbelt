@@ -32,3 +32,9 @@ seatbelt doctor
 - No cloud upload
 - Deterministic policy engine
 - Optional baseline seeding is local-only and disabled by default
+
+## Launch upgrade notes
+
+- Session mode hardening with workspace-scoped validation and stable reuse.
+- Action receipt hash-chaining for stronger audit continuity.
+- CI checks for build, tests, typecheck, lint, and release dry-run.

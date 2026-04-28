@@ -2,7 +2,7 @@
 
 Runtime firewall for AI coding agents before they touch your terminal, repo, secrets, or production.
 
-AgentSeatbelt intercepts risky terminal actions before execution, explains risk in plain language, enforces deterministic policy decisions, captures action receipts, and creates rollback checkpoints in Git repos.
+AgentSeatbelt intercepts risky terminal actions before execution, enforces deterministic policy, writes tamper-evident action receipts, and creates rollback checkpoints in Git repos.
 
 Built for:
 - Investors evaluating AI safety infrastructure with real execution controls
@@ -18,6 +18,7 @@ AI coding agents can now run shell commands, edit repositories, install packages
 - Repository integrity and rollback recovery points
 - Secret-bearing files and obvious credential access patterns
 - Production and infra surfaces that can cause live impact
+- Session context with workspace-scoped `agentSessionId`
 
 ## Features (v0)
 
@@ -28,6 +29,7 @@ AI coding agents can now run shell commands, edit repositories, install packages
 - Secret-read blocking by default (`.env`, keys, tokens)
 - Git checkpoint + rollback metadata
 - JSON action receipts with explainability (`matchDetails`, confidence, reason)
+- Receipt hash-chaining (`previousReceiptHash` + `receiptHash`) for audit continuity
 - Action receipt views: table, JSON, NDJSON + filters
 - Dry-run simulation mode
 - Doctor command for local readiness checks
@@ -38,6 +40,17 @@ AI coding agents can now run shell commands, edit repositories, install packages
 npm install
 npm run build
 node dist/index.js --help
+```
+
+### Demo asset path
+
+Use this path for the launch GIF:
+- `assets/agentseatbelt-demo-90s.gif`
+
+Once added, render it near the top of this README:
+
+```markdown
+![AgentSeatbelt demo](assets/agentseatbelt-demo-90s.gif)
 ```
 
 Optional local executable link:
@@ -83,7 +96,7 @@ Risk panel output includes:
 
 ### Action receipts
 
-Every decision writes a local JSON action receipt for auditability and demos. Receipts include risk rationale, policy decision, approval outcome, execution status, checkpoint metadata, and `agentSessionId` when a session is active.
+Every decision writes a local JSON action receipt for auditability and demos. Receipts include risk rationale, policy decision, approval outcome, execution status, checkpoint metadata, `agentSessionId` when a session is active, and a receipt hash chain.
 
 ### View action receipts
 
@@ -121,6 +134,8 @@ Creates `.seatbelt/session.json` with:
 - workspace path
 - session start time
 - protected surfaces
+
+If a valid session already exists in the current workspace, the same `agentSessionId` is reused.
 
 ## Config format
 
@@ -160,6 +175,7 @@ baselineAllowPatterns: []
 - Explicitly blocks secret-read commands by default.
 - Requires interactive approval for high-impact commands.
 - Captures action receipts for every decision path for auditing.
+- Links each receipt to the previous receipt hash for integrity checks.
 - Creates Git checkpoint metadata before risky execution for faster recovery.
 
 ## Architecture
@@ -209,7 +225,6 @@ seatbelt logs --tail 10
 - Receipt hash chaining
 - CI / GitHub Actions mode
 - Team policy packs
-- Dashboard
 - IDE integrations
 
 ## Testing
@@ -218,7 +233,23 @@ seatbelt logs --tail 10
 npm test
 ```
 
+## Release hygiene
+
+```bash
+npm run typecheck
+npm run lint
+npm run release:dry-run
+```
+
+## npm publish prep
+
+- Preferred package name: `agentseatbelt`
+- Fallback scope (if needed): `@kenjiifx/agentseatbelt`
+- Current repo is prepared for publish dry-runs only (`npm run release:dry-run`)
+
 ## Release notes
 
 - [CHANGELOG.md](CHANGELOG.md)
 - [RELEASE_NOTES_v0.1.0.md](RELEASE_NOTES_v0.1.0.md)
+- [CONTRIBUTING.md](CONTRIBUTING.md)
+- [docs/threat-model.md](docs/threat-model.md)
