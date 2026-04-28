@@ -4,6 +4,16 @@ set -euo pipefail
 echo "== AgentSeatbelt demo (safe mode) =="
 echo
 
+if ! command -v node >/dev/null 2>&1; then
+  echo "Node.js is required for this demo."
+  exit 1
+fi
+
+if ! command -v npm >/dev/null 2>&1; then
+  echo "npm is required for this demo."
+  exit 1
+fi
+
 if [[ ! -f "dist/index.js" ]]; then
   echo "Building project first..."
   npm run build
