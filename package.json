@@ -39,7 +39,10 @@
     "README.md",
     "LICENSE",
     "SECURITY.md",
-    "CHANGELOG.md"
+    "CHANGELOG.md",
+    "docs/BYPASS_AND_LIMITATIONS.md",
+    "docs/AGENT_INTEGRATIONS.md",
+    "policy-packs"
   ],
   "publishConfig": {
     "access": "public"
@@ -64,5 +67,10 @@
   },
   "bin": {
     "seatbelt": "dist/index.js"
+  },
+  "directories": {
+    "doc": "docs",
+    "example": "examples",
+    "test": "tests"
   }
 }
