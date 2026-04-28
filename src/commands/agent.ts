@@ -1,9 +1,14 @@
 import chalk from "chalk";
-import { startDevSession } from "../session/session.js";
+import { getActiveSession, startDevSession } from "../session/session.js";
 
 export function runAgentDev(): void {
+  const existing = getActiveSession(process.cwd());
   const session = startDevSession(process.cwd());
-  console.log(chalk.green("Protected agent session started."));
+  if (existing) {
+    console.log(chalk.yellow("Protected agent session already active."));
+  } else {
+    console.log(chalk.green("Protected agent session started."));
+  }
   console.log(`agentSessionId  : ${session.agentSessionId}`);
   console.log(`workspacePath   : ${session.workspacePath}`);
   console.log(`startedAt       : ${session.startedAt}`);

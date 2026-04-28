@@ -44,4 +44,23 @@ describe("agent session", () => {
     expect(loaded?.agentSessionId).toBe(started.agentSessionId);
     expect(loaded?.workspacePath).toBe(workspace);
   });
+
+  it("reuses existing valid session for same workspace", () => {
+    const workspace = makeTempWorkspace();
+    const first = startDevSession(workspace);
+    const second = startDevSession(workspace);
+    expect(second.agentSessionId).toBe(first.agentSessionId);
+  });
+
+  it("returns null for invalid session payload", () => {
+    const workspace = makeTempWorkspace();
+    const seatbeltDir = path.join(workspace, ".seatbelt");
+    fs.mkdirSync(seatbeltDir, { recursive: true });
+    fs.writeFileSync(
+      path.join(seatbeltDir, "session.json"),
+      JSON.stringify({ bad: "payload" }, null, 2),
+      "utf8",
+    );
+    expect(getActiveSession(workspace)).toBeNull();
+  });
 });

@@ -76,6 +76,9 @@ export interface ExecutionResult {
 export interface Receipt {
   id: string;
   timestamp: string;
+  chainIndex?: number;
+  previousReceiptHash?: string;
+  receiptHash?: string;
   agentSessionId?: string;
   command: string;
   profile: string;
