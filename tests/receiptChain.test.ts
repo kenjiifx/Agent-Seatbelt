@@ -2,7 +2,7 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
-import { writeReceipt, readReceipts } from "../src/logging/receiptLogger.js";
+import { writeReceipt, readReceipts, verifyReceiptChain } from "../src/logging/receiptLogger.js";
 import { Receipt } from "../src/types.js";
 
 const tempDirs: string[] = [];
@@ -65,5 +65,26 @@ describe("receipt hash chaining", () => {
     expect(newest.previousReceiptHash).toBe(prior.receiptHash);
     expect(typeof newest.receiptHash).toBe("string");
     expect(typeof prior.receiptHash).toBe("string");
+  });
+
+  it("detects tampered receipt hash chain", () => {
+    const workspace = makeTempWorkspace();
+    writeReceipt(receiptBase("rcpt_1", "2026-04-28T00:00:00.000Z"), workspace);
+    writeReceipt(receiptBase("rcpt_2", "2026-04-28T00:00:01.000Z"), workspace);
+    const receipts = readReceipts(workspace);
+    const newest = receipts[0];
+    if (!newest) throw new Error("Expected receipt");
+    newest.command = "echo tampered";
+    const logsDir = path.join(workspace, ".seatbelt", "logs");
+    const newestFile = fs
+      .readdirSync(logsDir)
+      .filter((n) => n.endsWith(".json"))
+      .map((n) => path.join(logsDir, n))
+      .sort((a, b) => fs.statSync(b).mtimeMs - fs.statSync(a).mtimeMs)[0];
+    if (!newestFile) throw new Error("Expected receipt file");
+    fs.writeFileSync(newestFile, JSON.stringify(newest, null, 2), "utf8");
+    const verified = verifyReceiptChain(workspace);
+    expect(verified.ok).toBe(false);
+    expect(verified.broken).toBeGreaterThan(0);
   });
 });
