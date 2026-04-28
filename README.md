@@ -2,197 +2,32 @@
 
 Runtime firewall for AI coding agents before they touch your terminal, repo, secrets, or production.
 
-AgentSeatbelt intercepts risky terminal actions before execution, enforces deterministic policy, writes tamper-evident action receipts, and creates rollback checkpoints in Git repos.
+![AgentSeatbelt demo](assets/agentseatbelt-demo-90s.gif)
 
-Built for:
-- Investors evaluating AI safety infrastructure with real execution controls
-- Senior developers who need deterministic, local-first guardrails before CI and production
+AgentSeatbelt is a local-first CLI guardrail that classifies command risk, enforces deterministic policy, captures tamper-evident action receipts, and creates rollback checkpoints for Git repositories.
 
-## Why now?
+## Why now
 
-AI coding agents can now run shell commands, edit repositories, install packages, access secrets, and trigger deploy paths. Modern developer environments were built for human intent, not autonomous tool execution. AgentSeatbelt adds a local control layer between agent output and real system impact.
+AI coding agents can run shell commands, modify repositories, install dependencies, read local files, and trigger deployment paths. Developer environments were built for human intent, not autonomous execution. AgentSeatbelt adds a deterministic control layer between agent output and system impact.
 
 ## What AgentSeatbelt protects
 
-- Terminal execution paths before risky commands run
+- Terminal execution before risky commands run
 - Repository integrity and rollback recovery points
-- Secret-bearing files and obvious credential access patterns
-- Production and infra surfaces that can cause live impact
-- Session context with workspace-scoped `agentSessionId`
+- Secret-bearing paths and common credential access patterns
+- Production and infrastructure command surfaces
+- Workspace-scoped session context via `agentSessionId`
 
-## Features (v0)
+## Core capabilities
 
-- Deterministic local risk classification (no paid APIs, no AI required)
-- Policy engine with configurable rules in `.seatbelt/config.yml`
-- Profiles: `dev`, `strict`, `ci`
-- Interactive approval for high/critical commands
-- Secret-read blocking by default (`.env`, keys, tokens)
-- Git checkpoint + rollback metadata
-- JSON action receipts with explainability (`matchDetails`, confidence, reason)
-- Receipt hash-chaining (`previousReceiptHash` + `receiptHash`) for audit continuity
-- Action receipt views: table, JSON, NDJSON + filters
-- Dry-run simulation mode
-- Doctor command for local readiness checks
-
-## Install and run locally
-
-```bash
-npm install
-npm run build
-node dist/index.js --help
-```
-
-### Demo asset path
-
-Use this path for the launch GIF:
-- `assets/agentseatbelt-demo-90s.gif`
-
-Once added, render it near the top of this README:
-
-```markdown
-![AgentSeatbelt demo](assets/agentseatbelt-demo-90s.gif)
-```
-
-Optional local executable link:
-
-```bash
-npm link
-seatbelt --help
-```
-
-## Core commands
-
-### Initialize
-
-```bash
-seatbelt init
-seatbelt init --seed-baseline
-```
-
-Creates:
-- `.seatbelt/config.yml`
-- `.seatbelt/logs/`
-- `.seatbelt/checkpoints.json`
-
-`--seed-baseline` is optional, local-only, disabled by default, and never uploads shell history.
-
-### Run a command through Seatbelt
-
-```bash
-seatbelt run "echo hello"
-seatbelt run "npm install" --profile strict
-seatbelt run "rm -rf build" --dry-run
-seatbelt run "git push origin main"
-```
-
-Risk panel output includes:
-- Command
-- Risk level + score
-- Why risky
-- Blast radius
-- Policy decision
-- Approval required (yes/no)
-- Rollback available (yes/no)
-
-### Action receipts
-
-Every decision writes a local JSON action receipt for auditability and demos. Receipts include risk rationale, policy decision, approval outcome, execution status, checkpoint metadata, `agentSessionId` when a session is active, and a receipt hash chain.
-
-### View action receipts
-
-```bash
-seatbelt logs
-seatbelt logs --tail 15
-seatbelt logs --risk high,critical
-seatbelt logs --decision block,require_approval
-seatbelt logs --format json
-seatbelt logs --format ndjson
-```
-
-### Roll back checkpoint
-
-```bash
-seatbelt rollback --list
-seatbelt rollback
-seatbelt rollback --id cp_1710000000000
-```
-
-### Environment diagnostics
-
-```bash
-seatbelt doctor
-```
-
-### Protected agent session (v0)
-
-```bash
-seatbelt agent dev
-```
-
-Creates `.seatbelt/session.json` with:
-- `agentSessionId`
-- workspace path
-- session start time
-- protected surfaces
-
-If a valid session already exists in the current workspace, the same `agentSessionId` is reused.
-
-## Config format
-
-`.seatbelt/config.yml` example:
-
-```yaml
-rules:
-  - pattern: "cat .env"
-    action: block
-    severity: critical
-  - pattern: "rm -rf"
-    action: require_approval
-    severity: critical
-  - pattern: "vercel --prod"
-    action: require_approval
-    severity: critical
-profiles:
-  dev:
-    low: allow
-    medium: allow
-    high: require_approval
-    critical: require_approval
-  strict:
-    low: allow
-    medium: require_approval
-    high: require_approval
-    critical: block
-settings:
-  defaultProfile: dev
-  allowBaselinePatterns: true
-baselineAllowPatterns: []
-```
-
-## Why safe-by-default
-
-- Deterministic pattern classifier and policy decisions.
-- Explicitly blocks secret-read commands by default.
-- Requires interactive approval for high-impact commands.
-- Captures action receipts for every decision path for auditing.
-- Links each receipt to the previous receipt hash for integrity checks.
-- Creates Git checkpoint metadata before risky execution for faster recovery.
-
-## Architecture
-
-```mermaid
-flowchart LR
-  userCmd["UserOrAgentCommand"] --> classify["DeterministicClassifier"]
-  classify --> policy["PolicyEngine(ConfigRules)"]
-  policy --> decision{"BlockOrApproveOrAllow"}
-  decision -->|allow| execute["ExecRunner"]
-  decision -->|requireApproval| approve["InteractiveApproval"]
-  approve --> checkpoint["GitCheckpointManager"]
-  checkpoint --> execute
-  decision -->|block| receipt["ReceiptLogger"]
-  execute --> receipt
-  receipt --> logs["LogsAndAuditViews"]
-```
+- Deterministic risk classification (no paid APIs)
+- Rule-based policy engine with profiles (`dev`, `strict`, `ci`)
+- Secret-read blocking by default
+- Approval gating for high-impact actions
+- Git checkpoint metadata before risky execution
+- Action receipts in `json`, `ndjson`, and table views
+- Receipt hash-chaining (`chainIndex`, `previousReceiptHash`, `receiptHash`)
+- Protected session mode: `seatbelt agent dev`
 
 ## Demo in 90 seconds
 
@@ -206,50 +41,70 @@ seatbelt logs --tail 10
 seatbelt doctor
 ```
 
-See also: `demo.sh` and `demo.ps1` for reproducible, safe demo runs.
+Cross-platform scripts:
+- `demo.sh`
+- `demo.ps1`
 
-## First-run UX
+## Quickstart
 
 ```bash
-seatbelt --help
-seatbelt init
-seatbelt agent dev
-seatbelt run "echo safe path" --dry-run
-seatbelt logs --tail 10
+npm install
+npm run build
+node dist/index.js --help
 ```
+
+Optional local link:
+
+```bash
+npm link
+seatbelt --help
+```
+
+## Session mode (v0)
+
+```bash
+seatbelt agent dev
+```
+
+Creates `.seatbelt/session.json` with:
+- `agentSessionId`
+- `workspacePath`
+- `startedAt`
+- `protectedSurfaces`
+
+If a valid session already exists for the current workspace, the same `agentSessionId` is reused.
+
+## Configuration
+
+Default config file: `.seatbelt/config.yml`
+
+```yaml
+rules:
+  - pattern: "cat .env"
+    action: block
+    severity: critical
+  - pattern: "rm -rf"
+    action: require_approval
+    severity: critical
+  - pattern: "vercel --prod"
+    action: require_approval
+    severity: critical
+```
+
+`--seed-baseline` is optional, local-only, disabled by default, and never uploads shell history.
 
 ## Roadmap
 
-- Agent session mode
+- Agent session hardening
 - MCP proxy / tool-call enforcement
-- Receipt hash chaining
 - CI / GitHub Actions mode
 - Team policy packs
 - IDE integrations
 
-## Testing
+## Trust and release docs
 
-```bash
-npm test
-```
-
-## Release hygiene
-
-```bash
-npm run typecheck
-npm run lint
-npm run release:dry-run
-```
-
-## npm publish prep
-
-- Preferred package name: `agentseatbelt`
-- Fallback scope (if needed): `@kenjiifx/agentseatbelt`
-- Current repo is prepared for publish dry-runs only (`npm run release:dry-run`)
-
-## Release notes
-
+- [SECURITY.md](SECURITY.md)
+- [docs/threat-model.md](docs/threat-model.md)
+- [CONTRIBUTING.md](CONTRIBUTING.md)
 - [CHANGELOG.md](CHANGELOG.md)
 - [RELEASE_NOTES_v0.1.0.md](RELEASE_NOTES_v0.1.0.md)
-- [CONTRIBUTING.md](CONTRIBUTING.md)
-- [docs/threat-model.md](docs/threat-model.md)
