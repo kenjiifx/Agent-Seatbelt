@@ -1,0 +1,24 @@
+name: Feature request
+description: Propose a focused improvement.
+title: "[Feature]: "
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem statement
+      description: What pain point does this solve?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed solution
+      description: Keep it specific and scoped.
+    validations:
+      required: true
+  - type: textarea
+    id: risks
+    attributes:
+      label: Safety and trust impact
+      description: How does this affect determinism, local-first guarantees, or auditability?

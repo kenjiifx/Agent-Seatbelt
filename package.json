@@ -1,18 +1,45 @@
 {
   "name": "agentseatbelt",
   "version": "0.1.0",
-  "description": "Developer-first CLI runtime firewall for AI coding agents",
+  "description": "Runtime firewall for AI coding agents before they touch your terminal, repo, secrets, or production.",
   "main": "dist/index.js",
   "scripts": {
     "test": "vitest run",
     "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "lint": "eslint src tests --ext .ts",
     "dev": "tsx src/index.ts",
-    "start": "node dist/index.js"
+    "start": "node dist/index.js",
+    "release:dry-run": "npm run build && npm run test && npm run typecheck && npm run lint && npm pack --dry-run"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": [
+    "cli",
+    "security",
+    "ai-agents",
+    "devtools",
+    "runtime-firewall"
+  ],
+  "author": "Moosa Alam",
+  "license": "MIT",
   "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kenjiifx/Agent-Seatbelt.git"
+  },
+  "bugs": {
+    "url": "https://github.com/kenjiifx/Agent-Seatbelt/issues"
+  },
+  "homepage": "https://github.com/kenjiifx/Agent-Seatbelt#readme",
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE",
+    "SECURITY.md",
+    "CHANGELOG.md"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
   "dependencies": {
     "chalk": "^5.6.2",
     "cli-table3": "^0.6.5",
@@ -21,7 +48,12 @@
     "zod": "^4.3.6"
   },
   "devDependencies": {
+    "@eslint/js": "^10.0.1",
     "@types/node": "^25.6.0",
+    "@typescript-eslint/eslint-plugin": "^8.59.1",
+    "@typescript-eslint/parser": "^8.59.1",
+    "eslint": "^10.2.1",
+    "globals": "^17.5.0",
     "tsx": "^4.21.0",
     "typescript": "^6.0.3",
     "vitest": "^4.1.5"

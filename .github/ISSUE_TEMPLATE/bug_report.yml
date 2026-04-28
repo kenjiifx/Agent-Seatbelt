@@ -1,0 +1,33 @@
+name: Bug report
+description: Report a reproducible issue in AgentSeatbelt.
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: What happened?
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Reproduction
+      description: Exact commands and environment details.
+      placeholder: |
+        seatbelt init
+        seatbelt run "..."
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Action receipt snippet (optional)
+      description: Redact sensitive values before sharing.
