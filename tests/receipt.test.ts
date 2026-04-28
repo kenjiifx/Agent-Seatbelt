@@ -70,4 +70,36 @@ describe("receipt schema", () => {
     });
     expect(parsed.success).toBe(true);
   });
+
+  it("accepts receipt with agent session context", () => {
+    const parsed = ReceiptSchema.safeParse({
+      id: "rcpt_456",
+      timestamp: new Date().toISOString(),
+      agentSessionId: "as_123456",
+      command: "echo hi",
+      profile: "dev",
+      dryRun: true,
+      risk: {
+        level: "low",
+        score: 20,
+        whyRisky: ["No high-risk patterns detected."],
+        blastRadius: "Limited local effect expected.",
+        matchedPatterns: [],
+        matchDetails: [],
+        remediation: [],
+      },
+      policy: {
+        action: "allow",
+        approvalRequired: false,
+        approvedByUser: null,
+      },
+      checkpoint: {
+        available: false,
+      },
+      execution: {
+        executed: false,
+      },
+    });
+    expect(parsed.success).toBe(true);
+  });
 });
