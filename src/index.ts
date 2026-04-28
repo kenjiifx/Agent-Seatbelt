@@ -6,6 +6,7 @@ import { runCommand } from "./commands/run.js";
 import { showLogs } from "./commands/logs.js";
 import { runRollback } from "./commands/rollback.js";
 import { runDoctor } from "./commands/doctor.js";
+import { runAgentDev } from "./commands/agent.js";
 
 const program = new Command();
 
@@ -55,6 +56,12 @@ program
   });
 
 program.command("doctor").description("Check local seatbelt readiness.").action(runDoctor);
+
+const agentProgram = program
+  .command("agent")
+  .description("Manage protected local agent sessions.");
+
+agentProgram.command("dev").description("Start a protected workspace dev session.").action(runAgentDev);
 
 program.configureOutput({
   outputError: (str, write) => write(chalk.red(str)),

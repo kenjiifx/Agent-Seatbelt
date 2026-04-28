@@ -4,6 +4,7 @@ import { z } from "zod";
 const ReceiptSchema = z.object({
   id: z.string(),
   timestamp: z.string(),
+  agentSessionId: z.string().optional(),
   command: z.string(),
   profile: z.string(),
   dryRun: z.boolean(),

@@ -4,6 +4,7 @@ import { classifyCommand } from "../risk/classifier.js";
 import { loadConfig, resolvePolicyDecision } from "../policy/policyEngine.js";
 import { createCheckpoint, isGitRepo } from "../git/checkpoint.js";
 import { writeReceipt } from "../logging/receiptLogger.js";
+import { getActiveSession } from "../session/session.js";
 import { execCommand } from "../utils/exec.js";
 import { PolicyAction, Receipt } from "../types.js";
 
@@ -65,6 +66,7 @@ export async function runCommand(command: string, options?: RunOptions): Promise
   const risk = classifyCommand(command);
   const policy = resolvePolicyDecision(risk, config, profile);
   const rollbackAvailable = await isGitRepo(cwd);
+  const session = getActiveSession(cwd);
 
   // Always block direct secret reads by default.
   if (/\b(cat|type|get-content)\s+.*(\.env|id_rsa|\.pem|token|secret)\b/i.test(command)) {
@@ -111,6 +113,7 @@ export async function runCommand(command: string, options?: RunOptions): Promise
   const receipt: Receipt = {
     id: `rcpt_${Date.now()}`,
     timestamp: new Date().toISOString(),
+    agentSessionId: session?.agentSessionId,
     command,
     profile,
     dryRun: Boolean(options?.dryRun),

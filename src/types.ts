@@ -76,6 +76,7 @@ export interface ExecutionResult {
 export interface Receipt {
   id: string;
   timestamp: string;
+  agentSessionId?: string;
   command: string;
   profile: string;
   dryRun: boolean;
@@ -102,4 +103,11 @@ export interface Receipt {
     executed: boolean;
     exitCode?: number;
   };
+}
+
+export interface AgentSession {
+  agentSessionId: string;
+  workspacePath: string;
+  startedAt: string;
+  protectedSurfaces: string[];
 }
