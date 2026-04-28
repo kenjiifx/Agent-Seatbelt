@@ -4,6 +4,14 @@ All notable changes to this project are documented in this file.
 
 ## Unreleased
 
+### Added
+- Speedrun-grade strategic docs package (`SPEEDRUN_BRIEF`, launch plan, proof board, interview scripts, integration roadmap docs).
+- New demo suite under `demos/` for 90-second and expanded safety walkthroughs.
+- Generic agent wrapper example under `examples/generic-agent-wrapper/`.
+- Policy pack examples under `policy-packs/`.
+- `seatbelt init` support for `--policy-pack` and `--profile`.
+- Init behavior tests for policy pack/profile application.
+
 ### Changed
 - GitHub Actions workflow updated to Node 24-compatible action/runtime settings.
 - CI install path uses `npm install` for cross-platform optional dependency compatibility.

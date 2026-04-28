@@ -32,3 +32,9 @@ Reduce risk from autonomous or semi-autonomous coding agents executing terminal 
 - Full shell sandboxing or syscall-level isolation
 - Data exfiltration detection across arbitrary network channels
 - Enterprise policy distribution/control plane
+- Commands executed outside Seatbelt command path
+
+## Bypass notes
+
+- Direct shell use can bypass Seatbelt policy checks.
+- Stronger enforcement will require shell proxy/IDE hooks/CI integration.
