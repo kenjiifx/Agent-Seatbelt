@@ -19,7 +19,7 @@ jobs:
           node-version: 24
           cache: npm
       - run: npm i -g npm@10
-      - run: npm ci
+      - run: npm install --no-audit --no-fund
       - run: npm run build
 
   tests:
@@ -31,7 +31,7 @@ jobs:
           node-version: 24
           cache: npm
       - run: npm i -g npm@10
-      - run: npm ci
+      - run: npm install --no-audit --no-fund
       - run: npm test
 
   typecheck:
@@ -43,7 +43,7 @@ jobs:
           node-version: 24
           cache: npm
       - run: npm i -g npm@10
-      - run: npm ci
+      - run: npm install --no-audit --no-fund
       - run: npm run typecheck
 
   lint:
@@ -55,7 +55,7 @@ jobs:
           node-version: 24
           cache: npm
       - run: npm i -g npm@10
-      - run: npm ci
+      - run: npm install --no-audit --no-fund
       - run: npm run lint
 
   release-dry-run:
@@ -67,5 +67,5 @@ jobs:
           node-version: 24
           cache: npm
       - run: npm i -g npm@10
-      - run: npm ci
+      - run: npm install --no-audit --no-fund
       - run: npm run release:dry-run
