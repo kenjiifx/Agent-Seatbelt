@@ -20,6 +20,12 @@ fi
 
 SB="node dist/index.js"
 
+# Ensure demo receipts/verification are deterministic for recording.
+mkdir -p .seatbelt/logs
+rm -f .seatbelt/logs/*.json
+rm -f .seatbelt/checkpoints.json
+rm -f .seatbelt/session.json
+
 $SB init
 echo
 $SB agent dev

@@ -16,6 +16,12 @@ if (-not (Test-Path "dist/index.js")) {
 $nodeBin = "node"
 $cliFile = "dist/index.js"
 
+# Ensure demo receipts/verification are deterministic for recording.
+New-Item -ItemType Directory -Force -Path ".seatbelt/logs" | Out-Null
+Get-ChildItem ".seatbelt/logs" -Filter "*.json" -ErrorAction SilentlyContinue | Remove-Item -Force
+if (Test-Path ".seatbelt/checkpoints.json") { Remove-Item ".seatbelt/checkpoints.json" -Force }
+if (Test-Path ".seatbelt/session.json") { Remove-Item ".seatbelt/session.json" -Force }
+
 & $nodeBin $cliFile init
 Write-Host ""
 & $nodeBin $cliFile agent dev

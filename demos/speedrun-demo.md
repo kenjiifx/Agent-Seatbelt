@@ -2,6 +2,8 @@
 
 This script is safe-by-default and avoids real destructive/deploy execution.
 
+It also resets local `.seatbelt/logs` receipts for deterministic demo verification output.
+
 ## Scene 1 - Safe command
 
 ```bash
