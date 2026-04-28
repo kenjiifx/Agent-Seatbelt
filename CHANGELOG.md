@@ -2,7 +2,7 @@
 
 All notable changes to this project are documented in this file.
 
-## Unreleased
+## v0.2.0 - 2026-04-28
 
 ### Added
 - CI workflow with build, tests, typecheck, lint, and release dry-run checks.
@@ -10,11 +10,14 @@ All notable changes to this project are documented in this file.
 - Threat model documentation.
 - Receipt hash-chaining metadata (`chainIndex`, `previousReceiptHash`, `receiptHash`).
 - Session hardening tests and receipt chain tests.
+- `seatbelt verify` command to validate receipt chain integrity.
+- `seatbelt status` command to summarize runtime readiness and trust signals.
 
 ### Changed
 - Session mode hardening with validation and workspace scoping.
 - npm publish preparation metadata and release scripts.
 - README tightened for investor + senior developer launch positioning.
+- Version upgraded to `0.2.0`.
 
 ## v0.1.0 - 2026-04-28
 

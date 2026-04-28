@@ -33,6 +33,8 @@ AI coding agents can run shell commands, modify repositories, install dependenci
 - Action receipts in `json`, `ndjson`, and table views
 - Receipt hash-chaining (`chainIndex`, `previousReceiptHash`, `receiptHash`)
 - Protected session mode: `seatbelt agent dev`
+- Chain integrity verification: `seatbelt verify`
+- Runtime posture summary: `seatbelt status`
 
 ## Security model
 
@@ -50,6 +52,8 @@ seatbelt run "echo safe path"
 seatbelt run "cat .env"
 seatbelt run "rm -rf build" --dry-run
 seatbelt run "vercel --prod" --dry-run
+seatbelt verify
+seatbelt status
 seatbelt logs --tail 10
 seatbelt doctor
 ```
@@ -123,6 +127,7 @@ rules:
 - [GOVERNANCE.md](GOVERNANCE.md)
 - [docs/threat-model.md](docs/threat-model.md)
 - [CHANGELOG.md](CHANGELOG.md)
+- [RELEASE_NOTES_v0.2.0.md](RELEASE_NOTES_v0.2.0.md)
 - [RELEASE_NOTES_v0.1.0.md](RELEASE_NOTES_v0.1.0.md)
 
 ## Roadmap
