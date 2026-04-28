@@ -57,14 +57,15 @@ describe("receipt hash chaining", () => {
     writeReceipt(receiptBase("rcpt_2", "2026-04-28T00:00:01.000Z"), workspace);
 
     const receipts = readReceipts(workspace);
-    const newest = receipts[0];
-    const prior = receipts[1];
+    const byId = new Map(receipts.map((r) => [r.id, r]));
+    const first = byId.get("rcpt_1");
+    const second = byId.get("rcpt_2");
 
-    expect(newest.chainIndex).toBe(2);
-    expect(prior.chainIndex).toBe(1);
-    expect(newest.previousReceiptHash).toBe(prior.receiptHash);
-    expect(typeof newest.receiptHash).toBe("string");
-    expect(typeof prior.receiptHash).toBe("string");
+    expect(first?.chainIndex).toBe(1);
+    expect(second?.chainIndex).toBe(2);
+    expect(second?.previousReceiptHash).toBe(first?.receiptHash);
+    expect(typeof second?.receiptHash).toBe("string");
+    expect(typeof first?.receiptHash).toBe("string");
   });
 
   it("detects tampered receipt hash chain", () => {
