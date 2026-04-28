@@ -7,6 +7,17 @@ function logsDir(cwd: string): string {
   return path.join(cwd, ".seatbelt", "logs");
 }
 
+function withChainFieldsRemoved(receipt: Receipt): Omit<Receipt, "receiptHash"> {
+  const { receiptHash, ...rest } = receipt;
+  void receiptHash;
+  return rest;
+}
+
+export function computeReceiptHash(receipt: Receipt): string {
+  const payload = withChainFieldsRemoved(receipt);
+  return crypto.createHash("sha256").update(JSON.stringify(payload)).digest("hex");
+}
+
 export function writeReceipt(receipt: Receipt, cwd: string = process.cwd()): string {
   const dir = logsDir(cwd);
   fs.mkdirSync(dir, { recursive: true });
@@ -19,10 +30,7 @@ export function writeReceipt(receipt: Receipt, cwd: string = process.cwd()): str
     chainIndex,
     previousReceiptHash,
   };
-  const receiptHash = crypto
-    .createHash("sha256")
-    .update(JSON.stringify(payload))
-    .digest("hex");
+  const receiptHash = computeReceiptHash(payload);
   const chained: Receipt = {
     ...payload,
     receiptHash,
@@ -45,4 +53,43 @@ export function readReceipts(cwd: string = process.cwd()): Receipt[] {
     .sort((a: string, b: string) => fs.statSync(b).mtimeMs - fs.statSync(a).mtimeMs);
 
   return files.map((file: string) => JSON.parse(fs.readFileSync(file, "utf8")) as Receipt);
+}
+
+export function verifyReceiptChain(cwd: string = process.cwd()): {
+  ok: boolean;
+  checked: number;
+  broken: number;
+  issues: string[];
+} {
+  const receiptsDesc = readReceipts(cwd);
+  const receipts = [...receiptsDesc].reverse();
+  const issues: string[] = [];
+
+  for (let i = 0; i < receipts.length; i += 1) {
+    const current = receipts[i];
+    if (!current) continue;
+    const expectedIndex = i + 1;
+    if (current.chainIndex !== expectedIndex) {
+      issues.push(`Receipt ${current.id}: chainIndex ${current.chainIndex ?? "missing"} != ${expectedIndex}`);
+    }
+    const expectedHash = computeReceiptHash(current);
+    if (current.receiptHash !== expectedHash) {
+      issues.push(`Receipt ${current.id}: receiptHash mismatch`);
+    }
+    if (i > 0) {
+      const prev = receipts[i - 1];
+      if (current.previousReceiptHash !== prev?.receiptHash) {
+        issues.push(`Receipt ${current.id}: previousReceiptHash link mismatch`);
+      }
+    } else if (current.previousReceiptHash !== undefined) {
+      issues.push(`Receipt ${current.id}: first receipt must not have previousReceiptHash`);
+    }
+  }
+
+  return {
+    ok: issues.length === 0,
+    checked: receipts.length,
+    broken: issues.length,
+    issues,
+  };
 }

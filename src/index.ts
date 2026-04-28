@@ -7,13 +7,15 @@ import { showLogs } from "./commands/logs.js";
 import { runRollback } from "./commands/rollback.js";
 import { runDoctor } from "./commands/doctor.js";
 import { runAgentDev } from "./commands/agent.js";
+import { runVerify } from "./commands/verify.js";
+import { runStatus } from "./commands/status.js";
 
 const program = new Command();
 
 program
   .name("seatbelt")
   .description("AgentSeatbelt: runtime firewall for AI coding agent terminal commands.")
-  .version("0.1.0");
+  .version("0.2.0");
 
 program.addHelpText(
   "after",
@@ -23,6 +25,8 @@ Getting started:
   seatbelt agent dev
   seatbelt run "echo safe path"
   seatbelt run "rm -rf build" --dry-run
+  seatbelt verify
+  seatbelt status
   seatbelt logs --tail 10
 `,
 );
@@ -68,6 +72,17 @@ program
   });
 
 program.command("doctor").description("Check local seatbelt readiness.").action(runDoctor);
+program
+  .command("verify")
+  .description("Verify action receipt hash-chain integrity.")
+  .option("--json", "Output verification details as JSON")
+  .action((opts) => runVerify(opts));
+
+program
+  .command("status")
+  .description("Show runtime status for config, receipts, session, and checkpoints.")
+  .option("--json", "Output status as JSON")
+  .action(async (opts) => runStatus(opts));
 
 const agentProgram = program
   .command("agent")
