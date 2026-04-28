@@ -4,6 +4,10 @@ Runtime firewall for AI coding agents before they touch your terminal, repo, sec
 
 AgentSeatbelt intercepts risky terminal actions before execution, explains risk in plain language, enforces deterministic policy decisions, captures action receipts, and creates rollback checkpoints in Git repos.
 
+Built for:
+- Investors evaluating AI safety infrastructure with real execution controls
+- Senior developers who need deterministic, local-first guardrails before CI and production
+
 ## Why now?
 
 AI coding agents can now run shell commands, edit repositories, install packages, access secrets, and trigger deploy paths. Modern developer environments were built for human intent, not autonomous tool execution. AgentSeatbelt adds a local control layer between agent output and real system impact.
@@ -188,6 +192,16 @@ seatbelt doctor
 
 See also: `demo.sh` and `demo.ps1` for reproducible, safe demo runs.
 
+## First-run UX
+
+```bash
+seatbelt --help
+seatbelt init
+seatbelt agent dev
+seatbelt run "echo safe path" --dry-run
+seatbelt logs --tail 10
+```
+
 ## Roadmap
 
 - Agent session mode
@@ -203,3 +217,8 @@ See also: `demo.sh` and `demo.ps1` for reproducible, safe demo runs.
 ```bash
 npm test
 ```
+
+## Release notes
+
+- [CHANGELOG.md](CHANGELOG.md)
+- [RELEASE_NOTES_v0.1.0.md](RELEASE_NOTES_v0.1.0.md)
