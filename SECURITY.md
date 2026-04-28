@@ -8,6 +8,7 @@ AgentSeatbelt is designed to be local-first and deterministic for developer trus
 - No telemetry: AgentSeatbelt does not phone home for analytics.
 - No cloud upload: command content, configs, and action receipts stay local by default.
 - Deterministic policy engine: decisions are rule-driven, explainable, and reproducible.
+- Optional baseline seeding (`--seed-baseline`) is local-only, disabled by default, and never uploads shell history.
 
 ## Reporting vulnerabilities
 

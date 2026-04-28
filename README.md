@@ -8,6 +8,13 @@ AgentSeatbelt intercepts risky terminal actions before execution, explains risk 
 
 AI coding agents can now run shell commands, edit repositories, install packages, access secrets, and trigger deploy paths. Modern developer environments were built for human intent, not autonomous tool execution. AgentSeatbelt adds a local control layer between agent output and real system impact.
 
+## What AgentSeatbelt protects
+
+- Terminal execution paths before risky commands run
+- Repository integrity and rollback recovery points
+- Secret-bearing files and obvious credential access patterns
+- Production and infra surfaces that can cause live impact
+
 ## Features (v0)
 
 - Deterministic local risk classification (no paid APIs, no AI required)
@@ -70,6 +77,10 @@ Risk panel output includes:
 - Approval required (yes/no)
 - Rollback available (yes/no)
 
+### Action receipts
+
+Every decision writes a local JSON action receipt for auditability and demos. Receipts include risk rationale, policy decision, approval outcome, execution status, checkpoint metadata, and `agentSessionId` when a session is active.
+
 ### View action receipts
 
 ```bash
@@ -94,6 +105,18 @@ seatbelt rollback --id cp_1710000000000
 ```bash
 seatbelt doctor
 ```
+
+### Protected agent session (v0)
+
+```bash
+seatbelt agent dev
+```
+
+Creates `.seatbelt/session.json` with:
+- `agentSessionId`
+- workspace path
+- session start time
+- protected surfaces
 
 ## Config format
 
