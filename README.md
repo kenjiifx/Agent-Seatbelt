@@ -4,7 +4,12 @@ Runtime firewall for AI coding agents before they touch your terminal, repo, sec
 
 ![AgentSeatbelt demo](assets/agentseatbelt-demo-90s.gif)
 
-AgentSeatbelt is a local-first CLI guardrail that classifies command risk, enforces deterministic policy, captures tamper-evident action receipts, and creates rollback checkpoints for Git repositories.
+AgentSeatbelt is a local-first CLI runtime guardrail that classifies command risk, enforces deterministic policy decisions, captures tamper-evident action receipts, and creates rollback checkpoints for Git repositories.
+
+Built for:
+- Investors evaluating category-defining AI safety infrastructure
+- Senior developers shipping with AI coding agents in real repositories
+- Security and DevSecOps teams requiring deterministic local controls
 
 ## Why now
 
@@ -28,6 +33,14 @@ AI coding agents can run shell commands, modify repositories, install dependenci
 - Action receipts in `json`, `ndjson`, and table views
 - Receipt hash-chaining (`chainIndex`, `previousReceiptHash`, `receiptHash`)
 - Protected session mode: `seatbelt agent dev`
+
+## Security model
+
+- Local-first runtime execution
+- No telemetry
+- No cloud upload of commands, receipts, or config
+- Deterministic policy outcomes
+- Workspace-scoped session IDs for traceable runs
 
 ## Demo in 90 seconds
 
@@ -58,6 +71,14 @@ Optional local link:
 ```bash
 npm link
 seatbelt --help
+```
+
+Health checks:
+
+```bash
+npm run test
+npm run typecheck
+npm run lint
 ```
 
 ## Session mode (v0)
@@ -93,6 +114,17 @@ rules:
 
 `--seed-baseline` is optional, local-only, disabled by default, and never uploads shell history.
 
+## Professional docs
+
+- [SECURITY.md](SECURITY.md)
+- [CONTRIBUTING.md](CONTRIBUTING.md)
+- [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md)
+- [SUPPORT.md](SUPPORT.md)
+- [GOVERNANCE.md](GOVERNANCE.md)
+- [docs/threat-model.md](docs/threat-model.md)
+- [CHANGELOG.md](CHANGELOG.md)
+- [RELEASE_NOTES_v0.1.0.md](RELEASE_NOTES_v0.1.0.md)
+
 ## Roadmap
 
 - Agent session hardening
@@ -100,11 +132,3 @@ rules:
 - CI / GitHub Actions mode
 - Team policy packs
 - IDE integrations
-
-## Trust and release docs
-
-- [SECURITY.md](SECURITY.md)
-- [docs/threat-model.md](docs/threat-model.md)
-- [CONTRIBUTING.md](CONTRIBUTING.md)
-- [CHANGELOG.md](CHANGELOG.md)
-- [RELEASE_NOTES_v0.1.0.md](RELEASE_NOTES_v0.1.0.md)
