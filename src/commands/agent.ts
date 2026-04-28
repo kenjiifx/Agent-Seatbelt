@@ -9,4 +9,5 @@ export function runAgentDev(): void {
   console.log(`startedAt       : ${session.startedAt}`);
   console.log(`protectedSurfaces: ${session.protectedSurfaces.join(", ")}`);
   console.log(chalk.gray("Saved .seatbelt/session.json"));
+  console.log(chalk.gray('Next: seatbelt run "echo safe path" --dry-run'));
 }

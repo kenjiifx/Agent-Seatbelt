@@ -73,8 +73,9 @@ export async function runCommand(command: string, options?: RunOptions): Promise
     policy.action = "block";
     policy.approvalRequired = false;
   }
+  const effectiveApprovalRequired = policy.approvalRequired && !options?.dryRun;
 
-  printRiskPanel(command, risk, policy.action, policy.approvalRequired, rollbackAvailable);
+  printRiskPanel(command, risk, policy.action, effectiveApprovalRequired, rollbackAvailable);
 
   let approvedByUser: boolean | null = null;
   let executed = false;
@@ -84,16 +85,21 @@ export async function runCommand(command: string, options?: RunOptions): Promise
   if (policy.action === "block") {
     console.log(chalk.red("Blocked by AgentSeatbelt policy."));
   } else {
-    if (policy.approvalRequired) {
+    if (effectiveApprovalRequired) {
       approvedByUser = await askApproval(command);
       if (!approvedByUser) {
         console.log(chalk.yellow("Command canceled by user."));
       }
     }
 
-    const allowedToRun = policy.action === "allow" || approvedByUser === true;
+    const allowedToRun =
+      Boolean(options?.dryRun) || policy.action === "allow" || approvedByUser === true;
     if (allowedToRun) {
-      if ((risk.riskLevel === "high" || risk.riskLevel === "critical") && rollbackAvailable) {
+      if (
+        !options?.dryRun &&
+        (risk.riskLevel === "high" || risk.riskLevel === "critical") &&
+        rollbackAvailable
+      ) {
         const checkpoint = await createCheckpoint(command, cwd);
         checkpointId = checkpoint?.id;
         if (checkpoint) {
@@ -128,7 +134,7 @@ export async function runCommand(command: string, options?: RunOptions): Promise
     },
     policy: {
       action: policy.action,
-      approvalRequired: policy.approvalRequired,
+      approvalRequired: effectiveApprovalRequired,
       approvedByUser,
       matchedRule: policy.matchedRule,
     },

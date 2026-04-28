@@ -65,4 +65,7 @@ export function runInit(options?: { seedBaseline?: boolean }): void {
   }
 
   console.log(chalk.green("Logs directory ready at .seatbelt/logs/"));
+  console.log(chalk.gray("Next steps:"));
+  console.log(chalk.gray('  seatbelt agent dev'));
+  console.log(chalk.gray('  seatbelt run "echo safe path"'));
 }

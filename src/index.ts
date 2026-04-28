@@ -15,6 +15,18 @@ program
   .description("AgentSeatbelt: runtime firewall for AI coding agent terminal commands.")
   .version("0.1.0");
 
+program.addHelpText(
+  "after",
+  `
+Getting started:
+  seatbelt init
+  seatbelt agent dev
+  seatbelt run "echo safe path"
+  seatbelt run "rm -rf build" --dry-run
+  seatbelt logs --tail 10
+`,
+);
+
 program
   .command("init")
   .description("Initialize seatbelt config, logs, and checkpoint metadata.")
