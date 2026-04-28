@@ -1,0 +1,20 @@
+rules:
+  - pattern: ".env"
+    action: block
+    severity: critical
+  - pattern: "rm -rf"
+    action: block
+    severity: critical
+  - pattern: "git push --force"
+    action: block
+    severity: critical
+profiles:
+  strict:
+    low: allow
+    medium: require_approval
+    high: require_approval
+    critical: block
+settings:
+  defaultProfile: strict
+  allowBaselinePatterns: false
+baselineAllowPatterns: []

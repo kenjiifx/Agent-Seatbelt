@@ -35,8 +35,14 @@ program
   .command("init")
   .description("Initialize seatbelt config, logs, and checkpoint metadata.")
   .option("--seed-baseline", "Seed low-risk baseline patterns from local shell history")
+  .option("--profile <name>", "Set default profile in config (dev|strict|ci)")
+  .option("--policy-pack <name>", "Initialize using policy-packs/<name>.yml")
   .action((opts) => {
-    runInit({ seedBaseline: opts.seedBaseline });
+    runInit({
+      seedBaseline: opts.seedBaseline,
+      profile: opts.profile,
+      policyPack: opts.policyPack,
+    });
   });
 
 program

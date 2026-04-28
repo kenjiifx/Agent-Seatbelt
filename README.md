@@ -4,7 +4,9 @@ Runtime firewall for AI coding agents before they touch your terminal, repo, sec
 
 ![AgentSeatbelt demo](assets/agentseatbelt-demo-90s.gif)
 
-AgentSeatbelt is a local-first CLI runtime guardrail that classifies command risk, enforces deterministic policy decisions, captures tamper-evident action receipts, and creates rollback checkpoints for Git repositories.
+AgentSeatbelt is the runtime security layer between AI agents and real-world execution.
+
+Policy, approvals, and audit trails for AI agents before they touch your terminal, repo, secrets, cloud, or production.
 
 Built for:
 - Investors evaluating category-defining AI safety infrastructure
@@ -35,6 +37,12 @@ AI coding agents can run shell commands, modify repositories, install dependenci
 - Protected session mode: `seatbelt agent dev`
 - Chain integrity verification: `seatbelt verify`
 - Runtime posture summary: `seatbelt status`
+
+## Category
+
+Developer-first runtime security for agent execution.
+
+This is not a generic prompt guardrail, not a sandbox, and not an endpoint detection agent. It is an execution-time policy and approval layer for risky agent actions.
 
 ## Security model
 
@@ -99,6 +107,14 @@ Creates `.seatbelt/session.json` with:
 
 If a valid session already exists for the current workspace, the same `agentSessionId` is reused.
 
+## From CLI wedge to control plane
+
+- **v0**: local terminal and repository enforcement for developers.
+- **v1**: direct coding-agent wrappers and integration guides.
+- **v2**: CI and MCP/tool-call policy enforcement.
+- **v3**: team policy bundles and audit sync patterns.
+- **v4**: organization-wide agent runtime governance.
+
 ## Configuration
 
 Default config file: `.seatbelt/config.yml`
@@ -118,6 +134,12 @@ rules:
 
 `--seed-baseline` is optional, local-only, disabled by default, and never uploads shell history.
 
+Policy pack initialization:
+
+```bash
+seatbelt init --policy-pack production-safe --profile strict
+```
+
 ## Professional docs
 
 - [SECURITY.md](SECURITY.md)
@@ -126,6 +148,17 @@ rules:
 - [SUPPORT.md](SUPPORT.md)
 - [GOVERNANCE.md](GOVERNANCE.md)
 - [docs/threat-model.md](docs/threat-model.md)
+- [docs/BYPASS_AND_LIMITATIONS.md](docs/BYPASS_AND_LIMITATIONS.md)
+- [docs/AGENT_INTEGRATIONS.md](docs/AGENT_INTEGRATIONS.md)
+- [docs/MCP_GATEWAY_ROADMAP.md](docs/MCP_GATEWAY_ROADMAP.md)
+- [docs/COMPETITIVE_LANDSCAPE.md](docs/COMPETITIVE_LANDSCAPE.md)
+- [policy-packs/README.md](policy-packs/README.md)
+- [docs/SPEEDRUN_BRIEF.md](docs/SPEEDRUN_BRIEF.md)
+- [docs/LAUNCH_PLAN.md](docs/LAUNCH_PLAN.md)
+- [docs/USER_INTERVIEW_SCRIPT.md](docs/USER_INTERVIEW_SCRIPT.md)
+- [docs/DESIGN_PARTNER_MEMO.md](docs/DESIGN_PARTNER_MEMO.md)
+- [docs/LANDING_PAGE_COPY.md](docs/LANDING_PAGE_COPY.md)
+- [docs/PROOF_BOARD.md](docs/PROOF_BOARD.md)
 - [CHANGELOG.md](CHANGELOG.md)
 - [RELEASE_NOTES_v0.2.0.md](RELEASE_NOTES_v0.2.0.md)
 - [RELEASE_NOTES_v0.1.0.md](RELEASE_NOTES_v0.1.0.md)

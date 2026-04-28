@@ -1,0 +1,23 @@
+rules:
+  - pattern: ".env"
+    action: block
+    severity: critical
+  - pattern: "vercel --prod"
+    action: block
+    severity: critical
+  - pattern: "terraform apply"
+    action: block
+    severity: critical
+  - pattern: "kubectl"
+    action: require_approval
+    severity: high
+profiles:
+  strict:
+    low: allow
+    medium: require_approval
+    high: block
+    critical: block
+settings:
+  defaultProfile: strict
+  allowBaselinePatterns: false
+baselineAllowPatterns: []

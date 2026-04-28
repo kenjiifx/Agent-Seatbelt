@@ -1,0 +1,20 @@
+rules:
+  - pattern: ".env"
+    action: block
+    severity: critical
+  - pattern: "npm install"
+    action: require_approval
+    severity: medium
+  - pattern: "git push origin main"
+    action: require_approval
+    severity: critical
+profiles:
+  dev:
+    low: allow
+    medium: allow
+    high: require_approval
+    critical: require_approval
+settings:
+  defaultProfile: dev
+  allowBaselinePatterns: true
+baselineAllowPatterns: []

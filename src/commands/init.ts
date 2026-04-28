@@ -3,7 +3,8 @@ import os from "node:os";
 import path from "node:path";
 import YAML from "yaml";
 import chalk from "chalk";
-import { DEFAULT_CONFIG } from "../policy/policyEngine.js";
+import { DEFAULT_CONFIG, loadConfig } from "../policy/policyEngine.js";
+import { SeatbeltConfig } from "../types.js";
 
 function guessHistoryPath(): string | null {
   const home = os.homedir();
@@ -40,7 +41,19 @@ function collectBaselinePatterns(limit: number = 120): string[] {
   return Array.from(new Set(lowRiskPatterns)).slice(0, 20);
 }
 
-export function runInit(options?: { seedBaseline?: boolean }): void {
+function loadPolicyPack(packName: string, cwd: string): SeatbeltConfig | null {
+  const packPath = path.join(cwd, "policy-packs", `${packName}.yml`);
+  if (!fs.existsSync(packPath)) {
+    return null;
+  }
+  return YAML.parse(fs.readFileSync(packPath, "utf8")) as SeatbeltConfig;
+}
+
+export function runInit(options?: {
+  seedBaseline?: boolean;
+  profile?: string;
+  policyPack?: string;
+}): void {
   const root = process.cwd();
   const seatbeltDir = path.join(root, ".seatbelt");
   const logs = path.join(seatbeltDir, "logs");
@@ -53,15 +66,37 @@ export function runInit(options?: { seedBaseline?: boolean }): void {
   }
 
   if (!fs.existsSync(configPath)) {
-    const config = structuredClone(DEFAULT_CONFIG);
+    const packConfig = options?.policyPack ? loadPolicyPack(options.policyPack, root) : null;
+    const config = {
+      ...structuredClone(DEFAULT_CONFIG),
+      ...(packConfig ?? {}),
+      settings: {
+        ...structuredClone(DEFAULT_CONFIG).settings,
+        ...(packConfig?.settings ?? {}),
+      },
+    } as SeatbeltConfig;
     if (options?.seedBaseline) {
       config.baselineAllowPatterns = collectBaselinePatterns();
+    }
+    if (options?.profile) {
+      config.settings = {
+        ...(config.settings ?? {}),
+        defaultProfile: options.profile,
+      };
     }
     fs.writeFileSync(configPath, YAML.stringify(config), "utf8");
     console.log(chalk.green("Initialized AgentSeatbelt in .seatbelt/"));
     console.log(chalk.gray(`Config: ${configPath}`));
+    if (options?.policyPack) {
+      console.log(chalk.gray(`Policy pack: ${options.policyPack}`));
+    }
+    if (options?.profile) {
+      console.log(chalk.gray(`Default profile: ${options.profile}`));
+    }
   } else {
     console.log(chalk.yellow("Config already exists, leaving it unchanged."));
+    const { config } = loadConfig(root);
+    console.log(chalk.gray(`Current profile: ${config.settings?.defaultProfile ?? "dev"}`));
   }
 
   console.log(chalk.green("Logs directory ready at .seatbelt/logs/"));

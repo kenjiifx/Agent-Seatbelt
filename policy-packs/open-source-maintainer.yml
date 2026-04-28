@@ -1,0 +1,20 @@
+rules:
+  - pattern: ".env"
+    action: block
+    severity: critical
+  - pattern: "git push origin main"
+    action: require_approval
+    severity: critical
+  - pattern: "gh release create"
+    action: require_approval
+    severity: high
+profiles:
+  dev:
+    low: allow
+    medium: require_approval
+    high: require_approval
+    critical: require_approval
+settings:
+  defaultProfile: dev
+  allowBaselinePatterns: true
+baselineAllowPatterns: []

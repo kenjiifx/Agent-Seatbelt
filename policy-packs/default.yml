@@ -1,0 +1,23 @@
+rules:
+  - pattern: "cat .env"
+    action: block
+    severity: critical
+  - pattern: "type .env"
+    action: block
+    severity: critical
+  - pattern: "Get-Content .env"
+    action: block
+    severity: critical
+  - pattern: "rm -rf"
+    action: require_approval
+    severity: critical
+profiles:
+  dev:
+    low: allow
+    medium: allow
+    high: require_approval
+    critical: require_approval
+settings:
+  defaultProfile: dev
+  allowBaselinePatterns: true
+baselineAllowPatterns: []
